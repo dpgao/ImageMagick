@@ -463,7 +463,7 @@ static MagickBooleanType DestroyDistributeCache(SplayTreeInfo *registry,
   /*
     Destroy distributed pixel cache.
   */
-  return(DeleteNodeFromSplayTree(registry,(const void *) session_key));
+  return(DeleteNodeFromSplayTree(registry,(const void *)(uintptr_t) session_key));
 }
 
 static MagickBooleanType OpenDistributeCache(SplayTreeInfo *registry,int file,
@@ -523,7 +523,7 @@ static MagickBooleanType OpenDistributeCache(SplayTreeInfo *registry,int file,
   p+=sizeof(image->metacontent_extent);
   if (SyncImagePixelCache(image,exception) == MagickFalse)
     return(MagickFalse);
-  status=AddValueToSplayTree(registry,(const void *) session_key,image);
+  status=AddValueToSplayTree(registry,(const void *)(uintptr_t) session_key,image);
   return(status);
 }
 
@@ -555,7 +555,7 @@ static MagickBooleanType ReadDistributeCacheMetacontent(SplayTreeInfo *registry,
   /*
     Read distributed pixel cache metacontent.
   */
-  image=(Image *) GetValueFromSplayTree(registry,(const void *) session_key);
+  image=(Image *) GetValueFromSplayTree(registry,(const void *)(uintptr_t) session_key);
   if (image == (Image *) NULL)
     return(MagickFalse);
   length=sizeof(region.width)+sizeof(region.height)+sizeof(region.x)+
@@ -610,7 +610,7 @@ static MagickBooleanType ReadDistributeCachePixels(SplayTreeInfo *registry,
   /*
     Read distributed pixel cache pixels.
   */
-  image=(Image *) GetValueFromSplayTree(registry,(const void *) session_key);
+  image=(Image *) GetValueFromSplayTree(registry,(const void *)(uintptr_t) session_key);
   if (image == (Image *) NULL)
     return(MagickFalse);
   length=sizeof(region.width)+sizeof(region.height)+sizeof(region.x)+
@@ -671,7 +671,7 @@ static MagickBooleanType WriteDistributeCacheMetacontent(
   /*
     Write distributed pixel cache metacontent.
   */
-  image=(Image *) GetValueFromSplayTree(registry,(const void *) session_key);
+  image=(Image *) GetValueFromSplayTree(registry,(const void *)(uintptr_t) session_key);
   if (image == (Image *) NULL)
     return(MagickFalse);
   length=sizeof(region.width)+sizeof(region.height)+sizeof(region.x)+
@@ -726,7 +726,7 @@ static MagickBooleanType WriteDistributeCachePixels(SplayTreeInfo *registry,
   /*
     Write distributed pixel cache pixels.
   */
-  image=(Image *) GetValueFromSplayTree(registry,(const void *) session_key);
+  image=(Image *) GetValueFromSplayTree(registry,(const void *)(uintptr_t) session_key);
   if (image == (Image *) NULL)
     return(MagickFalse);
   length=sizeof(region.width)+sizeof(region.height)+sizeof(region.x)+

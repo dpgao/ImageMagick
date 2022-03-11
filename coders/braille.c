@@ -179,10 +179,13 @@ static MagickBooleanType WriteBRAILLEImage(const ImageInfo *image_info,
 {
 #define do_cell(dx,dy,bit) \
 { \
-  if (image->storage_class == PseudoClass) \
-    cell|=(GetPixelIndex(image,p+x+dx+dy*image->columns) == polarity) << bit; \
-  else \
-    cell|=(GetPixelGreen(image,p+x+dx+dy*image->columns) == 0) << bit; \
+  if (image->storage_class == PseudoClass) { \
+    const Quantum *q = p + (ssize_t)(x+(dx)+(dy)*(image->columns)); \
+    cell|=(GetPixelIndex(image,q) == polarity) << (bit); \
+  } else { \
+    const Quantum *q = p + (ssize_t)(x+(dx)+(dy)*(image->columns)); \
+    cell|=(GetPixelGreen(image,q) == 0) << (bit);                   \
+  } \
 }
 
   char
