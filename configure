@@ -31664,8 +31664,9 @@ if test -n "$PNG_LIBS"; then
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_PNG_LIBS=`$PKG_CONFIG --libs "libpng >= 1.0.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
+#  pkg_cv_PNG_LIBS=`$PKG_CONFIG --libs "libpng >= 1.0.0" 2>/dev/null`
+#		      test "x$?" != "x0" && pkg_failed=yes
+  pkg_cv_PNG_LIBS=""
 else
   pkg_failed=yes
 fi
