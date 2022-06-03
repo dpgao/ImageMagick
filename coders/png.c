@@ -104,15 +104,9 @@
 /* PNG_PTR_NORETURN does not work on some platforms, in libpng-1.5.x */
 #define PNG_PTR_NORETURN
 
-#include "pnglibconf.h"
-#undef PNG_LINKAGE_API
-#define PNG_LINKAGE_API
-#define PNG_FUNCTION(type, name, args, attributes) static attributes type (*name) args = NULL;
-#define PNG_ALLOCATED
 #include <png.h>
 #include <zlib.h>
-#include <dlfcn.h>
-/* Define dlopen symbol and trampoline callback wrapping */
+
 #ifdef SANDBOX
 #define DLOPEN  dlopen_sandbox
 #define DLWRAP_CALLBACK(callback)   dlwrap_callback(callback)
@@ -7916,101 +7910,6 @@ ModuleExport size_t RegisterPNGImage(void)
       "format."
     };
 
-  // Dlopen libpng
-  void *libpng_handle = DLOPEN("libpng16.so.16", RTLD_LAZY);
-
-  // Pull in the symbols used by libpng with dlsym
-#define DLSYM_PULL(name) \
-  name = dlsym(libpng_handle, #name); \
-  if (NULL == (name)) do { fprintf(stderr, "Symbol " #name " not found in libpng\n"); return -1; } while (0)
-
-  DLSYM_PULL(png_access_version_number);
-  DLSYM_PULL(png_convert_from_time_t);
-  DLSYM_PULL(png_create_info_struct);
-  DLSYM_PULL(png_create_read_struct);
-//  DLSYM_PULL(png_create_read_struct_2);
-  DLSYM_PULL(png_create_write_struct);
-//  DLSYM_PULL(png_create_write_struct_2);
-  DLSYM_PULL(png_destroy_read_struct);
-  DLSYM_PULL(png_destroy_write_struct);
-  DLSYM_PULL(png_error);
-//  DLSYM_PULL(png_flush_data);
-  DLSYM_PULL(png_free);
-  DLSYM_PULL(png_free_data);
-  DLSYM_PULL(png_get_IHDR);
-  DLSYM_PULL(png_get_PLTE);
-//  DLSYM_PULL(png_get_asm_flags);
-  DLSYM_PULL(png_get_bKGD);
-  DLSYM_PULL(png_get_cHRM);
-//  DLSYM_PULL(png_get_data);
-//  DLSYM_PULL(png_get_eXIf_1);
-  DLSYM_PULL(png_get_error_ptr);
-  DLSYM_PULL(png_get_gAMA);
-  DLSYM_PULL(png_get_header_ver);
-//  DLSYM_PULL(png_get_iCCP);
-  DLSYM_PULL(png_get_io_ptr);
-  DLSYM_PULL(png_get_libpng_ver);
-  DLSYM_PULL(png_get_pHYs);
-  DLSYM_PULL(png_get_rowbytes);
-  DLSYM_PULL(png_get_sRGB);
-  DLSYM_PULL(png_get_tIME);
-  DLSYM_PULL(png_get_tRNS);
-  DLSYM_PULL(png_get_text);
-  DLSYM_PULL(png_get_user_chunk_ptr);
-  DLSYM_PULL(png_get_valid);
-  DLSYM_PULL(png_get_x_offset_pixels);
-  DLSYM_PULL(png_get_y_offset_pixels);
-//  DLSYM_PULL(png_jmpbuf);
-  DLSYM_PULL(png_longjmp);
-  DLSYM_PULL(png_malloc);
-//  DLSYM_PULL(png_permit_empty_plte);
-//  DLSYM_PULL(png_permit_mng_features);
-//  DLSYM_PULL(png_put_data);
-  DLSYM_PULL(png_read_end);
-  DLSYM_PULL(png_read_info);
-//  DLSYM_PULL(png_read_raw_profile);
-  DLSYM_PULL(png_read_row);
-  DLSYM_PULL(png_read_update_info);
-  DLSYM_PULL(png_set_IHDR);
-  DLSYM_PULL(png_set_PLTE);
-//  DLSYM_PULL(png_set_asm_flags);
-  DLSYM_PULL(png_set_bKGD);
-  DLSYM_PULL(png_set_benign_errors);
-  DLSYM_PULL(png_set_cHRM);
-  DLSYM_PULL(png_set_chunk_cache_max);
-  DLSYM_PULL(png_set_chunk_malloc_max);
-  DLSYM_PULL(png_set_compression_buffer_size);
-  DLSYM_PULL(png_set_compression_level);
-  DLSYM_PULL(png_set_compression_mem_level);
-  DLSYM_PULL(png_set_compression_strategy);
-  DLSYM_PULL(png_set_crc_action);
-  DLSYM_PULL(png_set_filter);
-  DLSYM_PULL(png_set_gAMA);
-//  DLSYM_PULL(png_set_iCCP);
-  DLSYM_PULL(png_set_interlace_handling);
-  DLSYM_PULL(png_set_invalid);
-  DLSYM_PULL(png_set_keep_unknown_chunks);
-  DLSYM_PULL(png_set_oFFs);
-  DLSYM_PULL(png_set_option);
-  DLSYM_PULL(png_set_pHYs);
-  DLSYM_PULL(png_set_packing);
-  DLSYM_PULL(png_set_read_fn);
-  DLSYM_PULL(png_set_read_user_chunk_fn);
-  DLSYM_PULL(png_set_sBIT);
-  DLSYM_PULL(png_set_sRGB);
-  DLSYM_PULL(png_set_sig_bytes);
-  DLSYM_PULL(png_set_swap);
-  DLSYM_PULL(png_set_tIME);
-  DLSYM_PULL(png_set_tRNS);
-  DLSYM_PULL(png_set_text);
-  DLSYM_PULL(png_set_user_limits);
-  DLSYM_PULL(png_set_write_fn);
-  DLSYM_PULL(png_warning);
-  DLSYM_PULL(png_write_end);
-  DLSYM_PULL(png_write_info);
-  DLSYM_PULL(png_write_info_before_PLTE);
-//  DLSYM_PULL(png_write_raw_profile);
-  DLSYM_PULL(png_write_row);
   *version='\0';
 
 #if defined(PNG_LIBPNG_VER_STRING)
